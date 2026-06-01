@@ -69,14 +69,14 @@ export function LoginForm({
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
-          <CardDescription>
+          {/* <CardDescription>
             Login with your Apple or Google account
-          </CardDescription>
+          </CardDescription> */}
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
             <FieldGroup>
-              <Field>
+              {/* <Field>
                 <Button variant="outline" type="button">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
@@ -95,7 +95,7 @@ export function LoginForm({
                   </svg>
                   Login with Google
                 </Button>
-              </Field>
+              </Field> */}
               {registered ? (
                 <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-700">
                   Account created. Sign in to continue.
@@ -106,9 +106,9 @@ export function LoginForm({
                   {error}
                 </div>
               ) : null}
-              <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
+              {/* <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with
-              </FieldSeparator>
+              </FieldSeparator> */}
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input

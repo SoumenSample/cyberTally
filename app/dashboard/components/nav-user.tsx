@@ -52,9 +52,13 @@ export function NavUser({
     .toUpperCase()
 
   const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" })
-    router.replace("/login")
-    router.refresh()
+    const response = await fetch("/api/auth/logout", { method: "POST" })
+
+    if (response.ok) {
+      router.replace("/login")
+    } else {
+      console.error("Failed to log out")
+    }
   }
 
   const goToNotifications = () => {
@@ -100,42 +104,17 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-           {/* <DropdownMenuGroup> */}
-              <DropdownMenuItem>
-                {/* <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
               <DropdownMenuItem
                 onSelect={(event) => {
                   event.preventDefault()
-                  goToNotifications()
+                  void handleLogout()
                 }}
               >
-                <Bell />
-                Notifications
+                <LogOut />
+                Log out
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onSelect={(event) => {
-                event.preventDefault()
-                void handleLogout()
-              }}
-            > */}
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
