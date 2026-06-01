@@ -36,6 +36,19 @@ const UserSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Company",
     },
+    dismissedNotifications: [
+      {
+        notificationId: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        dismissedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

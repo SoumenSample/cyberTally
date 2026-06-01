@@ -29,7 +29,7 @@ export async function getCurrentUserRecord() {
 
   await connectDB();
 
-  return User.findById(sessionUser.id).select("name email role activeCompany companies");
+  return User.findById(sessionUser.id).select("name email role activeCompany companies dismissedNotifications");
 }
 
 export async function getDefaultCompanyIdForCurrentUser() {

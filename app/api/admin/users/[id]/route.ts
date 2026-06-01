@@ -5,14 +5,14 @@ import { hasRole } from "@/lib/auth"
 import { connectDB } from "@/lib/db"
 import User from "@/models/User"
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const current = await getCurrentUser()
 
   if (!current || !hasRole(current, "admin")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
   }
 
-  const id = params.id
+  const { id } = await params
 
   const body = await request.json()
   const updates: any = {}
@@ -43,14 +43,14 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   return NextResponse.json({ user })
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const current = await getCurrentUser()
 
   if (!current || !hasRole(current, "admin")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
   }
 
-  const id = params.id
+  const { id } = await params
 
   // Prevent deleting yourself
   if (current.id === id) {
@@ -62,7 +62,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
   const user = await User.findByIdAndDelete(id)
 
   if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 })
+    return NextResponse.json({ ok: true, deleted: false })
   }
 
   return NextResponse.json({ ok: true })

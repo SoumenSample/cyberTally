@@ -24,7 +24,7 @@ export async function DELETE(_request: Request, context: RouteParams) {
     const invoice = await Invoice.findById(params.id)
 
     if (!invoice) {
-      return NextResponse.json({ error: "Invoice not found" }, { status: 404 })
+      return NextResponse.json({ ok: true, deleted: false })
     }
 
     await Invoice.deleteOne({ _id: params.id })

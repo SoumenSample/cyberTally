@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
-
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
@@ -56,7 +56,7 @@ export function CreateVoucherForm({ className, companyId, ...props }: React.Comp
   const companyLedgers = useMemo(
     () => ledgers.filter((ledger) => {
       if (!companyId) return true
-      const ledgerCompany = ledger.company?._id || ledger.company
+      const ledgerCompany = typeof ledger.company === "string" ? ledger.company : ledger.company?._id
       return String(ledgerCompany) === companyId
     }),
     [ledgers, companyId]

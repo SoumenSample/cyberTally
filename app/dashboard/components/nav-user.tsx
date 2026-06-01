@@ -57,6 +57,10 @@ export function NavUser({
     router.refresh()
   }
 
+  const goToNotifications = () => {
+    router.push("/dashboard/notifications")
+  }
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -96,9 +100,9 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
+           {/* <DropdownMenuGroup> */}
               <DropdownMenuItem>
-                <Sparkles />
+                {/* <Sparkles />
                 Upgrade to Pro
               </DropdownMenuItem>
             </DropdownMenuGroup>
@@ -112,7 +116,12 @@ export function NavUser({
                 <CreditCard />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={(event) => {
+                  event.preventDefault()
+                  goToNotifications()
+                }}
+              >
                 <Bell />
                 Notifications
               </DropdownMenuItem>
@@ -123,7 +132,7 @@ export function NavUser({
                 event.preventDefault()
                 void handleLogout()
               }}
-            >
+            > */}
               <LogOut />
               Log out
             </DropdownMenuItem>

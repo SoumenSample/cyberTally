@@ -5,14 +5,15 @@ import { hasRole } from "@/lib/auth"
 import { connectDB } from "@/lib/db"
 import LedgerGroup from "@/models/LedgerGroup"
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const current = await getCurrentUser()
   if (!current || !hasRole(current, "admin")) return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
 
+  const { id } = await params
   const body = await request.json()
   await connectDB()
 
-  const g = await LedgerGroup.findById(params.id)
+  const g = await LedgerGroup.findById(id)
   if (!g) return NextResponse.json({ error: "Not found" }, { status: 404 })
 
   if (body.name) g.name = body.name
@@ -24,23 +25,25 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   return NextResponse.json({ group: g })
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const current = await getCurrentUser()
   if (!current || !hasRole(current, "admin")) return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
 
+  const { id } = await params
   await connectDB()
 
-  const g = await LedgerGroup.findById(params.id)
-  if (!g) return NextResponse.json({ error: "Not found" }, { status: 404 })
+  const g = await LedgerGroup.findById(id)
+  if (!g) return NextResponse.json({ ok: true, deleted: false })
 
   await g.remove()
 
   return NextResponse.json({ ok: true })
 }
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   await connectDB()
-  const g = await LedgerGroup.findById(params.id)
+  const g = await LedgerGroup.findById(id)
   if (!g) return NextResponse.json({ error: "Not found" }, { status: 404 })
   return NextResponse.json({ group: g })
 }

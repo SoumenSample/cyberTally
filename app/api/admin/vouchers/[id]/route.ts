@@ -5,9 +5,10 @@ import { hasRole } from "@/lib/auth"
 import { connectDB } from "@/lib/db"
 import Voucher from "@/models/Voucher"
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   await connectDB()
-  const voucher = await Voucher.findById(params.id).populate({ path: "entries.ledger", select: "name company" })
+  const voucher = await Voucher.findById(id).populate({ path: "entries.ledger", select: "name company" })
 
   if (!voucher) {
     return NextResponse.json({ error: "Not found" }, { status: 404 })
@@ -16,7 +17,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
   return NextResponse.json({ voucher })
 }
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const current = await getCurrentUser()
 
@@ -24,10 +25,11 @@ export async function PATCH(request: Request, { params }: { params: { id: string
       return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
     }
 
+    const { id } = await params
     const body = await request.json()
     await connectDB()
 
-    const voucher = await Voucher.findById(params.id)
+    const voucher = await Voucher.findById(id)
 
     if (!voucher) {
       return NextResponse.json({ error: "Not found" }, { status: 404 })
@@ -46,19 +48,20 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const current = await getCurrentUser()
 
   if (!current || !hasRole(current, "admin")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
   }
 
+  const { id } = await params
   await connectDB()
 
-  const voucher = await Voucher.findById(params.id)
+  const voucher = await Voucher.findById(id)
 
   if (!voucher) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 })
+    return NextResponse.json({ ok: true, deleted: false })
   }
 
   await voucher.deleteOne()
